@@ -22,13 +22,13 @@ def create_board(width, height):
         board.append(row)
     return board
 
-def display_board(board,player1_color,player2_color):
+def display_board(board):
     # TODO: we can import this color_key later when calling this function with custom colors 
     #       or import the players color and replace YELLOW, RED with that variable 
     color_key = {
         0:" ",
-        1:(player1_color + "●" + colors.END),
-        2:(player2_color + "●" + colors.END)
+        1:(colors.YELLOW + "●" + colors.END),
+        2:(colors.RED + "●" + colors.END)
     }
     # NOTE: There can only be values in the board that are values in the color key or else error 
 
@@ -50,24 +50,24 @@ def display_board(board,player1_color,player2_color):
             print('[' + display_item + ']',end='')
         print()
 
-def pre_game():
-    board_width = 7
-    board_height = 6
-    print(f"Demensions of board: {board_width},{board_height}")
-    player1_color = colors.YELLOW
-    player1_peice = (player1_color + "●" + colors.END)
-    player2_color = colors.RED
-    player2_peice = (player2_color + "●" + colors.END)
-    print(f'Player 1 Color: Yellow {player1_peice} \nPlayer 2 Color: Red {player2_peice}')
-    print('Starting game now...\n\n')
+# def pre_game():
+#     board_width = 7
+#     board_height = 6
+#     print(f"Demensions of board: {board_width},{board_height}")
+#     player1_color = colors.YELLOW
+#     player1_peice = (player1_color + "●" + colors.END)
+#     player2_color = colors.RED
+#     player2_peice = (player2_color + "●" + colors.END)
+#     print(f'Player 1 Color: Yellow {player1_peice} \nPlayer 2 Color: Red {player2_peice}')
+#     print('Starting game now...\n\n')
 
-    game(board_width,board_height,player1_color,player2_color)
+#     game(board_width,board_height,player1_color,player2_color)
 
-def game(board_width,board_height,player1_color,player2_color):
-    board = create_board(board_width,board_height)
+def game():
+    board = create_board(7,6)
     game_over = False
     while not game_over:
-        display_board(board,player1_color,player2_color)
+        display_board(board)
         #get_valid_move()
         #Update the master board()
         #Check for win 
@@ -77,7 +77,7 @@ def game(board_width,board_height,player1_color,player2_color):
 
 
 if __name__ == '__main__':
-    pre_game()
+    game()
 
 
 '''
