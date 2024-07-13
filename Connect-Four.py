@@ -18,6 +18,18 @@ class colors:
 # print(colors.BLUE + "This text is blue!" + colors.END)
 
 def create_board(width, height):
+    '''
+    This function will return a list of lists where the length of the list 
+    will be the [hight] and the lenght of the sublists will be the [width]
+
+    :param width: the width of the 'board' or the length of the sublists
+    :type width: int
+    :param height: the height of the 'board' or the length of the main list
+    :type height: int
+
+    :rtype: list 
+    :return: a 2d list filled with integer zeros that represent the connect 4 board 
+    '''
     board = []
     for _ in range(height):
         row = []
@@ -26,14 +38,13 @@ def create_board(width, height):
     return board
 
 def display_board(board):
-    # TODO: we can import this color_key later when calling this function with custom colors 
-    #       or import the players color and replace YELLOW, RED with that variable 
     color_key = {
         0:" ",
         1:(colors.YELLOW + "●" + colors.END),
         2:(colors.RED + "●" + colors.END)
     }
-    # NOTE: There can only be values in the board that are values in the color key or else error 
+    # NOTE: Color Key keys can only be values in the board that are values in the color key or else error 
+    #       You could have multiple players in the future if you 
 
     # Print the matching numbers to columns on top 
     for k in range(1,len(board[0])+1):
@@ -53,7 +64,7 @@ def display_board(board):
             print('[' + display_item + ']',end='')
         print()
 
-# CHAT GPT CODE:
+## CHAT GPT CODE ##
 def get_key():
     if os.name == 'nt':
         import msvcrt
@@ -68,7 +79,7 @@ def get_key():
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return key
-
+## END OFF CHAT GPT CODE ##
 
 def get_valid_move(board):
     '''
