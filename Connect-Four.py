@@ -167,8 +167,6 @@ def forward_check(i,j,peice_num,board):
     # cut down on the number of checks by returning a auto false if the checking
     #  postion is at the end of the row, its not possible to have 4 in a row if
     #  the starting position is the 3rd from last position of the row 
-    if board[i][j] == 0:
-        return False
     if j > len(board[i])-required_in_a_row:
         return False
     
@@ -178,11 +176,11 @@ def forward_check(i,j,peice_num,board):
         # check that the next checking possiion is within bounds
         if j + move_forward_count < len(board[i]):
 
+            # if the cords have the same num as peice_num AND
             # if the peice to the right (however many right) is the same as the 
-            # to be checked peice then add to [peice_in_a_row] counter
-            if board[i][j+move_forward_count] == peice_num:
+            # to be checked peice [peice_num] then add to [peice_in_a_row] counter
+            if board[i][j] == peice_num and board[i][j+move_forward_count] == peice_num:
                 peice_in_row_count += 1
-                print(f'peices_in_row: {peice_in_row_count}')
 
                 # if there were [required_in_a_row] in a row then call a win 
                 if peice_in_row_count >= required_in_a_row:
