@@ -161,12 +161,13 @@ def forward_check(i,j,peice_num,board):
     # Define a counter for tracking how many are cuently in a row from the starting
     #  point of i,j
     peice_in_row_count = 1
+
     # Count how many times we have moved forward 
     move_forward_count = 1
     # cut down on the number of checks by returning a auto false if the checking
     #  postion is at the end of the row, its not possible to have 4 in a row if
     #  the starting position is the 3rd from last position of the row 
-    if peice_num == 0:
+    if board[i][j] == 0:
         return False
     if j > len(board[i])-required_in_a_row:
         return False
@@ -181,6 +182,7 @@ def forward_check(i,j,peice_num,board):
             # to be checked peice then add to [peice_in_a_row] counter
             if board[i][j+move_forward_count] == peice_num:
                 peice_in_row_count += 1
+                print(f'peices_in_row: {peice_in_row_count}')
 
                 # if there were [required_in_a_row] in a row then call a win 
                 if peice_in_row_count >= required_in_a_row:
