@@ -76,4 +76,77 @@ def testing_check_for_win():
         print(win)
         print('----')
     
-testing_check_for_win()
+def testing_player_keep_track():
+    n_turns = 5
+    player = 1
+    n_players = 2
+    for i in range(n_turns):
+        print(f'currently player {player}')
+        # NOTE: DO STUFF 
+        player = player % n_players+1
+
+
+def testing_update_board():
+    def create_board(width, height):
+        board = [[0,1,1,1,1,1,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0]]
+        
+        return board
+    class colors:
+        RED = '\033[91m'
+        GREEN = '\033[92m'
+        YELLOW = '\033[93m'
+        BLUE = '\033[94m'
+        PURPLE = '\033[95m'
+        CYAN = '\033[96m'
+        WHITE = '\033[97m'
+        END = '\033[0m'
+    def display_board(board):
+        color_key = {
+            0:" ",
+            1:(colors.YELLOW + "●" + colors.END),
+            2:(colors.RED + "●" + colors.END),
+            3:(colors.GREEN + "●" + colors.END),
+            4:(colors.BLUE + "●" + colors.END),
+            5:(colors.PURPLE + "●" + colors.END),
+            6:(colors.CYAN + "●" + colors.END)
+        }
+        # NOTE: Color Key keys can only be values in the board that are values in the
+        #  color key or else error 
+        #       You could have multiple players in the future if you 
+
+        # Print the matching numbers to columns on top 
+        for k in range(1,len(board[0])+1):
+            print(" " + str(k) + " ",end='')
+        print()
+
+
+        # Go through the board item by item 
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                # Master item is the value of the actuall board
+                master_item = board[i][j]
+
+                # Display item is the colored facy peice the master item traslates to 
+                display_item = color_key[master_item]
+                # Print that item in its spot on the board 
+                print('[' + display_item + ']',end='')
+            print()
+
+    board = create_board(7,6)
+    def update_board(): 
+        column = int(input("Column: "))
+        for i in range(len(board)-1,-1,-1):
+            if board[i][column] == 0:
+                up = i
+                board[up][column] = 1
+                display_board(board)
+                break
+    for _ in range(10):
+        update_board()
+
+testing_update_board()

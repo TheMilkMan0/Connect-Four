@@ -41,9 +41,14 @@ def display_board(board):
     color_key = {
         0:" ",
         1:(colors.YELLOW + "●" + colors.END),
-        2:(colors.RED + "●" + colors.END)
+        2:(colors.RED + "●" + colors.END),
+        3:(colors.GREEN + "●" + colors.END),
+        4:(colors.BLUE + "●" + colors.END),
+        5:(colors.PURPLE + "●" + colors.END),
+        6:(colors.CYAN + "●" + colors.END)
     }
-    # NOTE: Color Key keys can only be values in the board that are values in the color key or else error 
+    # NOTE: Color Key keys can only be values in the board that are values in the
+    #  color key or else error 
     #       You could have multiple players in the future if you 
 
     # Print the matching numbers to columns on top 
@@ -86,22 +91,29 @@ def get_valid_move(board):
     This function will ask the user to press a key to represent 
     the column they wish to have their peice placed. 
     The visual columns presented to the user start with the number 1. 
-    while the return value of this function will be ajusted for the column chosen to be in index form. 
+    while the return value of this function will be ajusted for the column chosen
+      to be in index form. 
 
-    :param board: the master board (2d List) with integers stored as players peices locations
+    :param board: the master board (2d List) with integers stored as players
+      peices locations
     :type board: list (2d list)
 
     :rtype: int
-    :return: integer representing column converted in the index form of the master board 
+    :return: integer representing column converted in the index form of the 
+    master board 
     '''
     # Constatnly Run until the user has a proper selection 
     while True:
-        # use try here because the program will try to convert the user input to a integer 
+        # use try here because the program will try to convert the user input 
+        # to a integer 
         try:
             print(("Enter column (1-7): "))
-            # Use the get_key function to instantly get the integer of the key pressed without the user having to press enter 
+            # Use the get_key function to instantly get the integer of the key
+            #  pressed without the user having to press enter 
             column = int(get_key()) - 1
-            # if the integer pressed is inside the culumn bounds of the board and the top most place of the column does not have a peice in it then continue 
+            # if the integer pressed is inside the culumn bounds of the board 
+            # and the top most place of the column does not have a peice in it
+            # then continue 
             if 0 <= column < len(board[0]) and board[0][column] == 0:
                 return column
             # if the integer is to large or small 
@@ -111,10 +123,25 @@ def get_valid_move(board):
         except:
             print("Please enter a valid integer.")
 
+
+def update_board(column,board,player):
+    # Start at the bottom of the board [len(board)-1] and
+    #  then work your way up [Step: -1] then stop at zero (the top most position on the board)
+    for i in range(len(board)-1,-1,-1):
+            # If the row we are currently on has a [0] in the column of the users chosing
+            # then change that possition on the board to the players digit
+            if board[i][column] == 0:
+                board[i][column] = player
+                return board
+
+
+
+
 def forward_check(i,j,peice_num,board):
     '''
     This function will check for [required_in_a_row] in a row. 
-    Customize: [required_in_a_row] can be changed to any number, 1 in a row will presumably end instantly
+    Customize: [required_in_a_row] can be changed to any number, 1 in a row will
+      presumably end instantly
     
     :param i: the row (sublist) we are in on the board
     :type i: int
@@ -129,13 +156,16 @@ def forward_check(i,j,peice_num,board):
     :return: True for win, False for no Win
 
     '''
-    required_in_a_row = 3
+    required_in_a_row = 4
     # ----------------------
-    # Define a counter for tracking how many are cuently in a row from the starting point of i,j
+    # Define a counter for tracking how many are cuently in a row from the starting
+    #  point of i,j
     peice_in_row_count = 1
     # Count how many times we have moved forward 
     move_forward_count = 1
-    # cut down on the number of checks by returning a auto false if the checking postion is at the end of the row, its not possible to have 4 in a row if the starting position is the 3rd from last position of the row 
+    # cut down on the number of checks by returning a auto false if the checking
+    #  postion is at the end of the row, its not possible to have 4 in a row if
+    #  the starting position is the 3rd from last position of the row 
     if peice_num == 0:
         return False
     if j > len(board[i])-required_in_a_row:
@@ -147,7 +177,8 @@ def forward_check(i,j,peice_num,board):
         # check that the next checking possiion is within bounds
         if j + move_forward_count < len(board[i]):
 
-            # if the peice to the right (however many right) is the same as the to be checked peice then add to [peice_in_a_row] counter
+            # if the peice to the right (however many right) is the same as the 
+            # to be checked peice then add to [peice_in_a_row] counter
             if board[i][j+move_forward_count] == peice_num:
                 peice_in_row_count += 1
 
@@ -156,31 +187,84 @@ def forward_check(i,j,peice_num,board):
 
                     # a return of true means there where 4 peices in a row 
                     return True
-            # Cut this function short by return false (lose) after there wasnt another in a row, because if we are only checking [required_in_a_row] times then all of those times have to be true for it to be a win                 
+            # Cut this function short by return false (lose) after there wasnt
+            #  another in a row, because if we are only checking 
+            # [required_in_a_row] times then all of those times have to be true
+            #  for it to be a win                 
             else:
                 return False
             move_forward_count += 1
 
+
+def check_for_win(player,board):
+    '''
+    This function will itterate over the board, passing the cords to the
+      different ways to win functions who will check for their respective wins
+      Forward, Diagonal 
+    
+    :param player: integer represeting player
+    :type player: int
+    :param board: the master board (2d list) with integers as players
+    :type board: list
+
+    :rtype: boolean
+    :return: True for win found, False for no win found
+    '''
+    # itterate over every space over the board
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            # pass coards to respective functions
+            # NOTE: They all return boolean 
+
+            # if a forward (horizontal) win was found 
+            if forward_check(i,j,player,board):
+                return True
+    # after going through all the cords and a win was not found
+    return False
+
+
 def game():
-    board = create_board(7,6)
+### CONFIGURATION VARIALBES ###
+    # Number of players. (MAX 6) 
+    n_players = 2  
+    # Height of board
+    height = 6
+    # Width of board
+    width = 7
+
+    #--------------------------
+    board = create_board(width,height)
     game_over = False
+    # Track the current player using integers represeting each player
+    player = 1
     while not game_over:
         display_board(board)
         # This variable is in the list index form (min being zero)
         column = get_valid_move(board) 
-        #Update the master board()
+        #Update the master board
+        board = update_board(column,board,player)
         #Check for win 
-        # which players 
-        game_over = True
+        if check_for_win(player,board):
+            game_over=True
+        
+        # Switch Players if game not won 
+        if not game_over: 
+            player = player % n_players+1
+
+    color_key_ending = {
+        0:" ",
+        1:(colors.YELLOW + "●" + colors.END),
+        2:(colors.RED + "●" + colors.END),
+        3:(colors.GREEN + "●" + colors.END),
+        4:(colors.BLUE + "●" + colors.END),
+        5:(colors.PURPLE + "●" + colors.END),
+        6:(colors.CYAN + "●" + colors.END)
+    }
+    display_board(board)
+    print(f"\nCONGRATULATIONS Player {player} {color_key_ending[player]} YOU WON!!! \n")
+        
 
 
 
 if __name__ == '__main__':
     game()
-
-
-'''
-RULES:
-    1. color1 & color2 variables have to be a color inside the colors class
-'''
-
