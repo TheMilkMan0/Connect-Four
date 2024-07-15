@@ -17,7 +17,7 @@ class colors:
 # print(today)
 # print(colors.BLUE + "This text is blue!" + colors.END)
 
-def create_board(width, height):
+def create_board(width: int, height: int) -> list[int]:
     '''
     This function will return a list of lists where the length of the list 
     will be the [hight] and the lenght of the sublists will be the [width]
@@ -30,14 +30,14 @@ def create_board(width, height):
     :rtype: list 
     :return: a 2d list filled with integer zeros that represent the connect 4 board 
     '''
-    board = []
+    board: list = []
     for _ in range(height):
         row = []
         row.extend([0]*width)
         board.append(row)
     return board
 
-def display_board(board):
+def display_board(board: list[int]):
     color_key = {
         0:" ",
         1:(colors.YELLOW + "●" + colors.END),
@@ -61,10 +61,10 @@ def display_board(board):
     for i in range(len(board)):
         for j in range(len(board[i])):
             # Master item is the value of the actuall board
-            master_item = board[i][j]
+            master_item: int = board[i][j]
 
             # Display item is the colored facy peice the master item traslates to 
-            display_item = color_key[master_item]
+            display_item: str = color_key[master_item]
             # Print that item in its spot on the board 
             print('[' + display_item + ']',end='')
         print()
@@ -86,7 +86,7 @@ def get_key():
         return key
 ## END OFF CHAT GPT CODE ##
 
-def get_valid_move(board):
+def get_valid_move(board: list[int]) -> int:
     '''
     This function will ask the user to press a key to represent 
     the column they wish to have their peice placed. 
@@ -110,7 +110,7 @@ def get_valid_move(board):
             print(("Enter column (1-7): "))
             # Use the get_key function to instantly get the integer of the key
             #  pressed without the user having to press enter 
-            column = int(get_key()) - 1
+            column: int = int(get_key()) - 1
             # if the integer pressed is inside the culumn bounds of the board 
             # and the top most place of the column does not have a peice in it
             # then continue 
@@ -124,7 +124,7 @@ def get_valid_move(board):
             print("Please enter a valid integer.")
 
 
-def update_board(column,board,player):
+def update_board(column: int, board: list[int], player: int) -> list[int]:
     # Start at the bottom of the board [len(board)-1] and
     #  then work your way up [Step: -1] then stop at zero (the top most position on the board)
     for i in range(len(board)-1,-1,-1):
@@ -137,7 +137,7 @@ def update_board(column,board,player):
 
 
 
-def forward_check(i,j,peice_num,board,required_in_a_row):
+def forward_check(i: int, j: int, peice_num: int, board: list[int], required_in_a_row: int) -> bool:
     '''
     This function will check for [required_in_a_row] in a row. 
     
@@ -159,10 +159,11 @@ def forward_check(i,j,peice_num,board,required_in_a_row):
     # ----------------------
     # Define a counter for tracking how many are cuently in a row from the starting
     #  point of i,j
-    peice_in_row_count = 1
+    peice_in_row_count: int = 1
 
     # Count how many times we have moved forward 
-    move_forward_count = 1
+    move_forward_count: int = 1
+
     # cut down on the number of checks by returning a auto false if the checking
     #  postion is at the end of the row, its not possible to have 4 in a row if
     #  the starting position is the 3rd from last position of the row 
@@ -195,7 +196,7 @@ def forward_check(i,j,peice_num,board,required_in_a_row):
             move_forward_count += 1
 
 
-def virtical_check(i,j,peice_num,board,required_in_a_row):
+def virtical_check(i: int, j: int, peice_num: int, board: list[int], required_in_a_row: int) -> bool:
     '''
     This function will check for [required_in_a_row] in a column.
     
@@ -216,10 +217,10 @@ def virtical_check(i,j,peice_num,board,required_in_a_row):
     '''
     # Define a counter for tracking how many are cuently in a row from the starting
     #  point of i,j
-    peice_in_row_count = 1
+    peice_in_row_count: int = 1
 
     # Count how many times we have moved forward 
-    move_forward_count = 1
+    move_forward_count: int = 1
 
    # cut down on the number of checks by returning a auto false if the checking
     #  postion is at the bottom of the column, its not possible to have 4 in a row if
@@ -252,7 +253,7 @@ def virtical_check(i,j,peice_num,board,required_in_a_row):
             move_forward_count += 1
 
 
-def to_right_diagonal_check(i,j,peice_num,board,required_in_a_row):
+def to_right_diagonal_check(i: int, j: int, peice_num: int, board: list[int], required_in_a_row: int) -> bool:
     '''
     This function will check for [required_in_a_row] in a diagonal starting from top left to bottom right.
     
@@ -273,10 +274,10 @@ def to_right_diagonal_check(i,j,peice_num,board,required_in_a_row):
     '''
     # Define a counter for tracking how many are cuently in a row from the starting
     #  point of i,j
-    peice_in_row_count = 1
+    peice_in_row_count: int = 1
 
     # Count how many times we have moved forward 
-    move_forward_count = 1
+    move_forward_count: int = 1
 
    # cut down on the number of checks by returning a auto false if the checking
     #  postion is at the bottom of the diagonal, its not possible to have 4 in a row if
@@ -309,7 +310,7 @@ def to_right_diagonal_check(i,j,peice_num,board,required_in_a_row):
             move_forward_count += 1
 
 
-def to_left_diagonal_check(i,j,peice_num,board,required_in_a_row):
+def to_left_diagonal_check(i: int, j: int, peice_num: int, board: list[int], required_in_a_row: int) -> bool:
     '''
     This function will check for [required_in_a_row] in a diagonal that goes top right to bottom left .
     
@@ -330,10 +331,10 @@ def to_left_diagonal_check(i,j,peice_num,board,required_in_a_row):
     '''
     # Define a counter for tracking how many are cuently in a row from the starting
     #  point of i,j
-    peice_in_row_count = 1
+    peice_in_row_count: int = 1
 
     # Count how many times we have moved forward 
-    move_forward_count = 1
+    move_forward_count: int = 1
     
     # from the starting point check ahead [required_in_a_row]-1 times because the starting position counts as one
     for _ in range(required_in_a_row-1):
@@ -362,7 +363,7 @@ def to_left_diagonal_check(i,j,peice_num,board,required_in_a_row):
         else:
             break
 
-def check_for_win(player,board,required_in_a_row):
+def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool:
     '''
     This function will itterate over the board, passing the cords to the
       different ways to win functions who will check for their respective wins
@@ -380,7 +381,7 @@ def check_for_win(player,board,required_in_a_row):
     :rtype: boolean
     :return: True for win found, False for no win found
     '''
-    required_in_a_row = 4
+    required_in_a_row: int = 4
     # itterate over every space over the board
     for i in range(len(board)):
         for j in range(len(board[i])):
@@ -404,7 +405,7 @@ def check_for_win(player,board,required_in_a_row):
     return False
 
 
-def game():
+def game() -> None:
 ### CONFIGURATION VARIALBES ###
     # Number of players. (MAX 6) 
     n_players = 2  
