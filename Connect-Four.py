@@ -137,11 +137,9 @@ def update_board(column,board,player):
 
 
 
-def forward_check(i,j,peice_num,board):
+def forward_check(i,j,peice_num,board,required_in_a_row):
     '''
     This function will check for [required_in_a_row] in a row. 
-    Customize: [required_in_a_row] can be changed to any number, 1 in a row will
-      presumably end instantly
     
     :param i: the row (sublist) we are in on the board
     :type i: int
@@ -151,12 +149,13 @@ def forward_check(i,j,peice_num,board):
     :type peice_num: int
     :param board: the master board (2d list) with integers as players
     :type board: list
+    :param required_in_a_row: the number of peices that are required to be in a row for it to count as a win
+    :type required_in_a_row: int
 
     :rtype: boolean
     :return: True for win, False for no Win
 
     '''
-    required_in_a_row = 4
     # ----------------------
     # Define a counter for tracking how many are cuently in a row from the starting
     #  point of i,j
@@ -196,11 +195,127 @@ def forward_check(i,j,peice_num,board):
             move_forward_count += 1
 
 
+def virtical_check(i,j,peice_num,board,required_in_a_row):
+    '''
+    This function will check for [required_in_a_row] in a column.
+    
+    :param i: the row (sublist) we are in on the board
+    :type i: int
+    :param j: the column (index) we are in on the row of the board
+    :type j: int
+    :param peice_num: the integeger representing the player on the master board 
+    :type peice_num: int
+    :param board: the master board (2d list) with integers as players
+    :type board: list
+    :param required_in_a_row: the number of peices that are required to be in a row for it to count as a win
+    :type required_in_a_row: int
+
+    :rtype: boolean
+    :return: True for win, False for no Win
+
+    '''
+    # Define a counter for tracking how many are cuently in a row from the starting
+    #  point of i,j
+    peice_in_row_count = 1
+
+    # Count how many times we have moved forward 
+    move_forward_count = 1
+
+   # cut down on the number of checks by returning a auto false if the checking
+    #  postion is at the bottom of the column, its not possible to have 4 in a row if
+    #  the starting position is the 3rd from last position of the column (top to bottom) 
+    if i > len(board)-required_in_a_row:
+        return False
+    
+    # from the starting point check ahead [required_in_a_row] times
+    for _ in range(required_in_a_row-1):
+
+        # check that the next checking possiion is within bounds
+        if i + move_forward_count < len(board):
+            # if the cords have the same num as peice_num AND
+            # if the peice to the bottom (however many down) is the same as the 
+            # to be checked peice [peice_num] then add to [peice_in_a_row] counter
+            if board[i][j] == peice_num and board[i+move_forward_count][j] == peice_num:
+                peice_in_row_count += 1
+
+                # if there were [required_in_a_row] in a row then call a win 
+                if peice_in_row_count >= required_in_a_row:
+
+                    # a return of true means there where 4 peices in a row 
+                    return True
+            # Cut this function short by return false (lose) after there wasnt
+            #  another in a row, because if we are only checking 
+            # [required_in_a_row] times then all of those times have to be true
+            #  for it to be a win                 
+            else:
+                return False
+            move_forward_count += 1
+
+
+def to_right_diagonal_check(i,j,peice_num,board,required_in_a_row):
+    '''
+    This function will check for [required_in_a_row] in a diagonal.
+    
+    :param i: the row (sublist) we are in on the board
+    :type i: int
+    :param j: the column (index) we are in on the row of the board
+    :type j: int
+    :param peice_num: the integeger representing the player on the master board 
+    :type peice_num: int
+    :param board: the master board (2d list) with integers as players
+    :type board: list
+    :param required_in_a_row: the number of peices that are required to be in a row for it to count as a win
+    :type required_in_a_row: int
+
+    :rtype: boolean
+    :return: True for win, False for no Win
+
+    '''
+    # Define a counter for tracking how many are cuently in a row from the starting
+    #  point of i,j
+    peice_in_row_count = 1
+
+    # Count how many times we have moved forward 
+    move_forward_count = 1
+
+   # cut down on the number of checks by returning a auto false if the checking
+    #  postion is at the bottom of the diagonal, its not possible to have 4 in a row if
+    #  the starting position is the 3rd from last position of the diagonal2 (top to bottom) 
+    if i > len(board)-required_in_a_row or j > len(board[i])-required_in_a_row:
+        return False
+    
+    # from the starting point check ahead [required_in_a_row] times
+    for _ in range(required_in_a_row-1):
+
+        # check that the next checking possiion is within bounds
+        if i + move_forward_count < len(board) and j + move_forward_count < len(board[i]):
+            # if the cords have the same num as peice_num AND
+            # if the peice to the bottom (however many down) is the same as the 
+            # to be checked peice [peice_num] then add to [peice_in_a_row] counter
+            if board[i][j] == peice_num and board[i+move_forward_count][j+move_forward_count] == peice_num:
+                peice_in_row_count += 1
+
+                # if there were [required_in_a_row] in a row then call a win 
+                if peice_in_row_count >= required_in_a_row:
+
+                    # a return of true means there where 4 peices in a row 
+                    return True
+            # Cut this function short by return false (lose) after there wasnt
+            #  another in a row, because if we are only checking 
+            # [required_in_a_row] times then all of those times have to be true
+            #  for it to be a win                 
+            else:
+                return False
+            move_forward_count += 1
+            
+
 def check_for_win(player,board):
     '''
     This function will itterate over the board, passing the cords to the
       different ways to win functions who will check for their respective wins
       Forward, Diagonal 
+    Customize: [required_in_a_row] can be changed to any number, 1 in a row will
+      presumably end instantly
     
     :param player: integer represeting player
     :type player: int
@@ -210,6 +325,7 @@ def check_for_win(player,board):
     :rtype: boolean
     :return: True for win found, False for no win found
     '''
+    required_in_a_row = 4
     # itterate over every space over the board
     for i in range(len(board)):
         for j in range(len(board[i])):
@@ -217,8 +333,16 @@ def check_for_win(player,board):
             # NOTE: They all return boolean 
 
             # if a forward (horizontal) win was found 
-            if forward_check(i,j,player,board):
+            if forward_check(i,j,player,board,required_in_a_row):
                 return True
+            if virtical_check(i,j,player,board,required_in_a_row):
+                return True
+            if to_right_diagonal_check(i,j,player,board,required_in_a_row):
+                return True
+            
+            
+
+
     # after going through all the cords and a win was not found
     return False
 
