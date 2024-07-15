@@ -307,7 +307,7 @@ def to_right_diagonal_check(i,j,peice_num,board,required_in_a_row):
             else:
                 return False
             move_forward_count += 1
-            
+
 
 def to_left_diagonal_check(i,j,peice_num,board,required_in_a_row):
     '''
@@ -362,7 +362,7 @@ def to_left_diagonal_check(i,j,peice_num,board,required_in_a_row):
         else:
             break
 
-def check_for_win(player,board):
+def check_for_win(player,board,required_in_a_row):
     '''
     This function will itterate over the board, passing the cords to the
       different ways to win functions who will check for their respective wins
@@ -374,6 +374,8 @@ def check_for_win(player,board):
     :type player: int
     :param board: the master board (2d list) with integers as players
     :type board: list
+    :param required_in_a_row: number of peices that are required to be in a row to win
+    :type required_in_a_row: int
 
     :rtype: boolean
     :return: True for win found, False for no win found
@@ -410,6 +412,8 @@ def game():
     height = 6
     # Width of board
     width = 7
+    # Number of peices in a row for it to be counted as a win
+    required_in_a_row = 4
 
     #--------------------------
     board = create_board(width,height)
@@ -423,7 +427,7 @@ def game():
         #Update the master board
         board = update_board(column,board,player)
         #Check for win 
-        if check_for_win(player,board):
+        if check_for_win(player,board,required_in_a_row):
             game_over=True
         
         # Switch Players if game not won 
