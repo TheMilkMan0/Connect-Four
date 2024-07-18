@@ -1,5 +1,6 @@
 import os 
 import sys 
+import time
 
 # ANSI escape codes for colors
 class colors:
@@ -16,6 +17,19 @@ class colors:
 # today = (colors.RED + "∎" + colors.END)
 # print(today)
 # print(colors.BLUE + "This text is blue!" + colors.END)
+
+def return_color_key() -> dict[int,str]:
+    # NOTE: Color Key keys can only be values in the board that are values in the
+    #  color key or else error 
+    return {
+            0:" ",
+            1:(colors.YELLOW + "●" + colors.END),
+            2:(colors.RED + "●" + colors.END),
+            3:(colors.GREEN + "●" + colors.END),
+            4:(colors.BLUE + "●" + colors.END),
+            5:(colors.PURPLE + "●" + colors.END),
+            6:(colors.CYAN + "●" + colors.END)
+        }
 
 def create_board(width: int, height: int) -> list[int]:
     '''
@@ -38,19 +52,9 @@ def create_board(width: int, height: int) -> list[int]:
     return board
 
 def display_board(board: list[int]):
-    color_key = {
-        0:" ",
-        1:(colors.YELLOW + "●" + colors.END),
-        2:(colors.RED + "●" + colors.END),
-        3:(colors.GREEN + "●" + colors.END),
-        4:(colors.BLUE + "●" + colors.END),
-        5:(colors.PURPLE + "●" + colors.END),
-        6:(colors.CYAN + "●" + colors.END)
-    }
-    # NOTE: Color Key keys can only be values in the board that are values in the
-    #  color key or else error 
-    #       You could have multiple players in the future if you 
-
+    color_key = return_color_key()
+    # Clear the consolor the print the new board
+    os.system('cls' if os.name == 'nt' else 'clear')
     # Print the matching numbers to columns on top 
     for k in range(1,len(board[0])+1):
         print(" " + str(k) + " ",end='')
@@ -123,6 +127,33 @@ def get_valid_move(board: list[int]) -> int:
         except:
             print("Please enter a valid integer.")
 
+def animate_placement(board: list[int], i: int, column: int, player: int) -> None:
+    '''
+    This function will receive the cords of the new placed peice, along with the player integer.
+    Then it will animate the placement of that piece 
+
+    :param board: the master board (2d List) with integers stored as players
+      peices locations
+    :type board: list (2d list)
+    :param i: the row (sublist) on the board (2d list) where the peice was placed
+    :type i: int
+    :param column: the column (index) in the sublist on the board (2d list) where the peice was placed 
+    :type column: int
+    :param player: the integeger representing the player on the master board 
+    :type player: int
+    '''
+    # get the color key to pull the players color 
+    color_key = return_color_key()
+    ## CUSTOMIZEABLE ##
+    animate_delay = 0.2
+    # copy the list so we dont mess with the main board 
+    copy_board = board
+    # update the copy of the board which will animate the placement 
+    for j in range(i):
+        copy_board[j][column] = player
+        display_board(copy_board)
+        time.sleep(animate_delay)
+        copy_board[j][column] = 0
 
 def update_board(column: int, board: list[int], player: int) -> list[int]:
     # Start at the bottom of the board [len(board)-1] and
@@ -131,7 +162,9 @@ def update_board(column: int, board: list[int], player: int) -> list[int]:
             # If the row we are currently on has a [0] in the column of the users chosing
             # then change that possition on the board to the players digit
             if board[i][column] == 0:
+                animate_placement(board,i,column,player)
                 board[i][column] = player
+                # Now that we found the corrext spot we willl use it to animate the peice dropping to that spot
                 return board
 
 
@@ -408,7 +441,7 @@ def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool
 def game() -> None:
 ### CONFIGURATION VARIALBES ###
     # Number of players. (MAX 6) 
-    n_players = 2  
+    n_players = 2
     # Height of board
     height = 6
     # Width of board
