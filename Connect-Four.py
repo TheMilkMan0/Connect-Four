@@ -143,9 +143,10 @@ def animate_placement(board: list[int], i: int, column: int, player: int) -> Non
     :type player: int
     '''
     # get the color key to pull the players color 
-    color_key = return_color_key()
+    color_key: dict[int,str] = return_color_key()
     ## CUSTOMIZEABLE ##
-    animate_delay = 0.2
+    # the time delay before animating the next peace.
+    animate_delay: float = 0.2
     # copy the list so we dont mess with the main board 
     copy_board = board
     # update the copy of the board which will animate the placement 
@@ -420,7 +421,8 @@ def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool
         for j in range(len(board[i])):
             # pass coards to respective functions
             # NOTE: They all return boolean 
-
+            if board[i][j] == 0:
+                pass
             # if a forward (horizontal) win was found 
             if forward_check(i,j,player,board,required_in_a_row):
                 return True
