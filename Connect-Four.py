@@ -111,7 +111,8 @@ def get_valid_move(board: list[int]) -> int:
         # use try here because the program will try to convert the user input 
         # to a integer 
         try:
-            print(("Enter column (1-7): "))
+            board_width = str(len(board))
+            print((f"Enter column (1-{board_width}): "))
             # Use the get_key function to instantly get the integer of the key
             #  pressed without the user having to press enter 
             column: int = int(get_key()) - 1
@@ -126,6 +127,7 @@ def get_valid_move(board: list[int]) -> int:
         # if the key press was not a integer at all 
         except:
             print("Please enter a valid integer.")
+            time.sleep(1)
 
 def animate_placement(board: list[int], i: int, column: int, player: int) -> None:
     '''
@@ -440,16 +442,84 @@ def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool
     return False
 
 
+def customizations() -> dict:
+    '''
+    This function will ask the user for the players game cutomization preferences.
+    It will ask for the 
+    Width of board -- Limited to 2-100
+    Height of board -- Limited to 2-100
+    Number of Players -- Limited 2-6
+    Required peices in a row to win -- Limited 2-100
+
+    All these questions are customizeable by changing the [questions_dict] dictionary
+    the layout of the dictionary is as follows
+    {'Question?':[(min_val,max_val),default_val]}
+
+    :param preconfig: a simple boolean telling the function if the player has already had customizations 
+    :type preconfig: boolean
+
+    :return user_preferences: Dictionary holding the question as the key and the valuing being the users selction 
+    :rtype:
+    '''
+    
+
+    # Define list of questions and what values they are allowed to answer, and the defaults to the quetsions to then prompt the player. Allowing for expansion in the future 
+    questions_dict: dict[str,list[tuple(int,int),int]] = {'Width of board?':[(2,100),7], \
+                                                          'Height of board?':[(2,100),6], \
+                                                            'Number of Players?':[(2,6),2], \
+                                                             'How many required peices in a row to win?':[(2,100),4]}
+    
+    # NOTE: This list will have the user preferences in order of the questions above 
+    user_preferences: list = []
+    
+    for question in questions_dict:
+        # Define the min and max possible response 
+        min,max = questions_dict[question][0]
+        while True:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            try:
+                # Print the question to the user, also showing the player they can press 0 for the default
+                user_input: int = int(input(question+f"\nPress 0 for default: {questions_dict[question][1]}\n"))
+
+                # if the number is within the limits 
+                if min <= user_input <= max:
+                    # tell the player of their selection and save the number
+                    print(f"Selected {user_input} for {question}")
+                    user_preferences.append(user_input)
+                    break
+                # if the player selects 0 for the default
+                elif user_input == 0:
+                    user_preferences.append(questions_dict[question][1])
+                    break
+                else:
+                    print(f"Answer out of bounds. {min} - {max} (inclusive)")
+            except:
+                print("Please enter a valid integer.")
+    return (user_preferences[:len(user_preferences)])
+
+
+
 def game() -> None:
-### CONFIGURATION VARIALBES ###
-    # Number of players. (MAX 6) 
-    n_players = 2
-    # Height of board
-    height = 6
-    # Width of board
-    width = 7
-    # Number of peices in a row for it to be counted as a win
-    required_in_a_row = 4
+    '''
+    This function will play connect 4, 
+    also allowing the player to make some customizations
+    '''
+
+    
+# ### CONFIGURATION VARIALBES ###
+#     # Number of players. (MAX 6) 
+#     n_players = 2
+#     # Height of board
+#     height = 6
+#     # Width of board
+#     width = 7
+#     # Number of peices in a row for it to be counted as a win
+#     required_in_a_row = 4
+
+    positive_answers = ['yes','y','sure','yeah','absolutely','definitely','of course','yep','yup','indeed','certainly']
+    user_input = input("Would you like to customize your game? (yes or no)\n")
+    if user_input.lower() in positive_answers:
+        width,height,n_players,required_in_a_row = customizations()
 
     #--------------------------
     board = create_board(width,height)
@@ -469,20 +539,17 @@ def game() -> None:
         # Switch Players if game not won 
         if not game_over: 
             player = player % n_players+1
-
-    color_key_ending = {
-        0:" ",
-        1:(colors.YELLOW + "●" + colors.END),
-        2:(colors.RED + "●" + colors.END),
-        3:(colors.GREEN + "●" + colors.END),
-        4:(colors.BLUE + "●" + colors.END),
-        5:(colors.PURPLE + "●" + colors.END),
-        6:(colors.CYAN + "●" + colors.END)
-    }
+    # Get the color key dictionary
+    color_key_ending = return_color_key()
+    # Show the end winning board to the players
     display_board(board)
     print(f"\nCONGRATULATIONS Player {player} {color_key_ending[player]} YOU WON!!! \n")
-        
 
+    # ask the user if they would like to play again
+    user_input = input("Would you like to play again? \n")
+    affermative_answers = ['yes','y','sure','yeah','absolutely','definitely','of course','yep','yup','indeed','certainly']
+    if user_input in affermative_answers:
+        game()
 
 
 if __name__ == '__main__':

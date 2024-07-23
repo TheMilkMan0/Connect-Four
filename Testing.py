@@ -149,4 +149,13 @@ def testing_update_board():
     for _ in range(10):
         update_board()
 
-testing_update_board()
+
+def testing_in_list_idea():
+    list = ['y','yes']
+    input = 'y'
+    if input in list:
+        print("Input Valid")
+    else:
+        print("Input NOT Valid")
+
+testing_in_list_idea()
