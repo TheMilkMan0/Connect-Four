@@ -417,6 +417,7 @@ def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool
     :rtype: boolean
     :return: True for win found, False for no win found
     '''
+
     # itterate over every space over the board
     for i in range(len(board)):
         for j in range(len(board[i])):
@@ -441,7 +442,7 @@ def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool
     return False
 
 
-def customizations() -> dict:
+def customizations() -> list[int]:
     '''
     This function will ask the user for the players game cutomization preferences.
     It will ask for the 
@@ -457,8 +458,8 @@ def customizations() -> dict:
     :param preconfig: a simple boolean telling the function if the player has already had customizations 
     :type preconfig: boolean
 
-    :return user_preferences: Dictionary holding the question as the key and the valuing being the users selction 
-    :rtype:
+    :return user_preferences: List holding the user choices of the quetions asked in [questions_dict] in order of the question asked
+    :rtype: list[int]
     '''
     
 
@@ -469,21 +470,23 @@ def customizations() -> dict:
                                                              'How many required peices in a row to win?':[(2,100),4]}
     
     # NOTE: This list will have the user preferences in order of the questions above 
-    user_preferences: list = []
+    user_preferences: list[int] = []
     
     for question in questions_dict:
         # Define the min and max possible response 
         min,max = questions_dict[question][0]
         while True:
+            # Before asking a quetsion or the next question clear the console to make it look cleaner 
             os.system('cls' if os.name == 'nt' else 'clear')
             try:
                 # Print the question to the user, also showing the player they can press 0 for the default
                 user_input: int = int(input(question+f"\nPress 0 for default: {questions_dict[question][1]}\n"))
 
-                # if the number is within the limits 
+                # if the number typed is within the limits of questions limits 
                 if min <= user_input <= max:
                     # tell the player of their selection and save the number
                     print(f"Selected {user_input} for {question}")
+                    # add the user choice to the list 
                     user_preferences.append(user_input)
                     break
                 # if the player selects 0 for the default
@@ -501,7 +504,15 @@ def customizations() -> dict:
 def game() -> None:
     '''
     This function will play connect 4, 
-    also allowing the player to make some customizations
+    also allowing the player to make some customizations.
+
+    First it will ask the user if they would like to customize the game
+    if yes, it will get the cutomizations from the user,
+    after will create the board with the users customizations in mind.
+    if no, it will continue to the basic connect-4 game with a board 
+        size of 6x7, 2 players, 4 peices in a row to win.
+    After a player places its peices in 4 (or whatever [required_in_a_row]) 
+        then it will say who one and ask if you would like to play again
     '''
 
     
