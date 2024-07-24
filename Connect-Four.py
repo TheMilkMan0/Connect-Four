@@ -417,7 +417,6 @@ def check_for_win(player: int, board: list[int], required_in_a_row: int) -> bool
     :rtype: boolean
     :return: True for win found, False for no win found
     '''
-    required_in_a_row: int = 4
     # itterate over every space over the board
     for i in range(len(board)):
         for j in range(len(board[i])):
